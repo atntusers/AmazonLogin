@@ -27,7 +27,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
 public class SeleniumAmazonTest {
-	public static void main(String[] args) throws InterruptedException, Exception {
+	public static void main(String[] args) throws InterruptedException, Exception, IOException {
 		String gUserID="admin@fgtsoft.site";
 		String gPass="Ram@12345";
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
@@ -42,32 +42,22 @@ public class SeleniumAmazonTest {
 		driver2.findElement(By.id("identifierId")).sendKeys(gUserID); //userid
 
 		driver2.findElement(By.xpath(".//span[@class='RveJvd snByac']")).click();
-		// Wait For Page To Load
 		Thread.sleep(5000);
 		driver2.findElement(By.name("password")).sendKeys(gPass); //password
 		driver2.findElement(By.xpath(".//span[@class='RveJvd snByac']")).click();
 		Thread.sleep(5000);
-
-
-
+		FileWriter outputfile = new FileWriter(System.getProperty("user.dir") + "/testResult.csv"); 
+		CSVWriter writer = new CSVWriter(outputfile); 
 		try {
-			// create FileWriter object with file as parameter
-
-			FileWriter outputfile = new FileWriter(System.getProperty("user.dir") + "/testResult.csv"); 
-			  
-		    // create CSVWriter object filewriter object as parameter 
-		    CSVWriter writer = new CSVWriter(outputfile); 
-  
-		    // adding header to csv 
-		    String[] header = { "emailID", "password","Result" }; 
-		    writer.writeNext(header); 
-
+			
+			String[] header = { "UserName", "emailID","Result" }; 
+			writer.writeNext(header); 
 			BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/test.csv"));
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				String str[] = line.split(",");
 				if(!((line.contains("Pass"))||(line.contains("Skip")))) {
-					System.out.println(str[0] + "," + str[1] + "," + str[2]);
+					System.out.println("Testing for :: "+str[0] + "," + str[1] + "," + str[2]);
 					String name=str[0];
 					String emailAddress= str[1];
 					String pass= str[2];
@@ -80,7 +70,6 @@ public class SeleniumAmazonTest {
 					String country=str[9];
 
 					String finalRes= seleniumUI(driver2,gUserID, gPass,name, emailAddress, pass, mobile, pin, house, street, city, state,country);
-					System.out.println("finalRes::" + finalRes);
 					if(finalRes.contains("Pass")) {
 						String[] data1 = { name, emailAddress, "Pass" }; 
 						writer.writeNext(data1);
@@ -88,42 +77,21 @@ public class SeleniumAmazonTest {
 						String[] data1 = { name, emailAddress, finalRes}; 
 						writer.writeNext(data1);
 					}
-		 	        
-
-					/*if(finalRes.contains("Pass")) {
-						String[] data1 = {name+","+emailAddress+","+pass+","+mobile+","+pin+","+mobile+","+pin+","+house+","+street+","+city+","+state+","+country+","+finalRes};
-						writer.writeNext(data1); 
-					}else {
-						String[] data1 = {name+","+emailAddress+","+pass+","+mobile+","+pin+","+mobile+","+pin+","+house+","+street+","+city+","+state+","+country+","+finalRes};
-						writer.writeNext(data1);
-					}*/
-
-					/*FileWriter csvWriter = new FileWriter(System.getProperty("user.dir") + "/new.csv");
-					if(finalRes.contains("Fail")) {
-						String record = name+","+emailAddress+","+pass+","+mobile+","+pin+","+mobile+","+pin+","+house+","+street+","+city+","+state+","+country+","+finalRes;
-						csvWriter.append(record);
-					}else{
-						// update pass or skip status in excel
-						String record = name+","+emailAddress+","+pass+","+mobile+","+pin+","+mobile+","+pin+","+house+","+street+","+city+","+state+","+country+","+finalRes;
-						csvWriter.append(record);
-					}*/
-
 				}else {
 					System.out.println(str[0] + "," + str[1] + "," + str[2] +"skip this details");
 				}
 			}
-			// closing writer connection
-			
-
 			formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 			Date dateend = new Date();  
 			System.out.println("*********************** End Time ******************* : "+formatter.format(dateend));
-			writer.close();
-			driver2.close();
+			
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally {
+			writer.close();
+			driver2.close();
 		}
 
 	}
@@ -131,13 +99,18 @@ public class SeleniumAmazonTest {
 	public static String seleniumUI(WebDriver driver2,String gName, String gPass,String name, String emailID, String password, String mobile, String pin, String house,
 			String street, String city, String state, String country) throws InterruptedException, Exception, IOException {
 		String finalRes=null;
+		String captchaURL=null;
+		Captcha captchaVal=null;
+		String otp=null;
+		int counter1=0;
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
+		try {
 		driver.manage().deleteAllCookies();
 		driver.manage().window().maximize();
 		driver.get("https://www.amazon.com/ap/register?showRememberMe=true&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.com%2F%3Fref_%3Dnav_ya_signin%26_encoding%3DUTF8&prevRID=2T13VTJ5NJ3JEB8RXX4E&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&prepopulatedLoginId=&failedSignInCount=0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&pageId=usflex&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0");
 
-		// amazon first reg page
+		System.out.println("Amazon First Registration page loaded");
 		Thread.sleep(500);
 		driver.findElement(By.id("ap_customer_name")).sendKeys(name);
 		driver.findElement(By.id("ap_email")).sendKeys(emailID);
@@ -147,16 +120,19 @@ public class SeleniumAmazonTest {
 		Thread.sleep(500);
 
 		String errText = driver.findElement(By.xpath(".//body")).getAttribute("innerHTML");
-		String captchaURL=null;
-		Captcha captchaVal=null;
-		String otp=null;
-		int counter1=0;
+		
 		if (errText.contains("captcha")) {
 			do {
-				System.out.println("inside 1st capcha screen");
-				captchaURL=driver.findElement(By.xpath(".//img[contains(@src,'captcha')]")).getAttribute("src");
-				captchaVal= ExampleNewRecaptchaToken(captchaURL);
-				driver.findElement(By.id("auth-captcha-guess")).sendKeys(captchaVal.toString());
+				System.out.println("Inside capcha screen");
+				if(driver.findElement(By.xpath(".//body")).getAttribute("innerHTML").contains("Hear the challenge")) {
+					captchaURL=driver.findElement(By.xpath(".//img[contains(@src,'captcha')]")).getAttribute("src");
+					captchaVal= ExampleNewRecaptchaToken(captchaURL);
+					if(captchaVal!=null) {
+					driver.findElement(By.id("auth-captcha-guess")).sendKeys(captchaVal.toString());
+					}else {
+						break;
+					}
+				}
 				driver.findElement(By.id("ap_password")).sendKeys(password);
 				driver.findElement(By.id("ap_password_check")).sendKeys(password);
 				driver.findElement(By.id("continue")).click();
@@ -174,7 +150,12 @@ public class SeleniumAmazonTest {
 					System.out.println("inside page Anti-Automation Challenge ");
 					captchaURL=driver.findElement(By.xpath(".//img[contains(@src,'captcha')]")).getAttribute("src");
 					captchaVal= ExampleNewRecaptchaToken(captchaURL);
-					driver.findElement(By.xpath(".//input[@name='cvf_captcha_input']")).sendKeys(captchaVal.toString());
+					if(captchaVal!=null) {
+						driver.findElement(By.xpath(".//input[@name='cvf_captcha_input']")).sendKeys(captchaVal.toString());
+						}else {
+							break;
+						}
+					
 					driver.findElement(By.xpath(".//input[@name='cvf_captcha_captcha_action']")).click();
 					Thread.sleep(500);
 					errText = driver.findElement(By.xpath(".//body")).getAttribute("innerHTML");
@@ -194,10 +175,13 @@ public class SeleniumAmazonTest {
 			String OPTpagevalidation= driver.findElement(By.xpath(".//body")).getAttribute("innerHTML");
 			if(!(OPTpagevalidation.contains("Add mobile number"))) {
 				do {
+					//check if any error msg in OTP page
 					if(driver.findElement(By.xpath(".//body")).getAttribute("innerHTML").contains("Invalid OTP. Please check your code and try again."))	{
-						driver.findElement(By.className("a-link-normal cvf-widget-btn cvf-widget-link-resend cvf-widget-link-disable-target")).click();
+						Thread.sleep(1000);
+						driver.findElement(By.xpath(".//a[contains(text(),'Resend OTP')]")).click();
 						Thread.sleep(2000);
 					}
+					//moving to gmail account ro get the OTP
 					driver2.findElement(By.xpath(".//a[@title='Inbox']")).click();
 					Thread.sleep(5000);
 					List <WebElement> inbox= driver2.findElements(By.xpath("(//table[@class='F cf zt'])[2]//tr//td[6]//span[@class='y2']"));
@@ -209,11 +193,8 @@ public class SeleniumAmazonTest {
 							break;
 						}
 					}
-
-
 					//MailOTPReader mailReader = new MailOTPReader();
 					//String opt = mailReader.getOTP();
-					System.out.println("OTP value::" + otp); 
 					driver.findElement(By.xpath(".//input[@name='code']")).sendKeys(otp);
 					driver.findElement(By.xpath("(//input[@type='submit'])[1]")).click();
 					Thread.sleep(6000);
@@ -221,6 +202,7 @@ public class SeleniumAmazonTest {
 				}while(OPTpagevalidation.contains("Invalid OTP. Please check your code and try again."));
 				otpSuccess=true;
 			}else {
+				//if add mobile number page will appear then skip the user
 				finalRes="Skip";
 				otpSuccess=false;
 			}
@@ -263,8 +245,6 @@ public class SeleniumAmazonTest {
 					Thread.sleep(1000);
 					driver.findElement(By.id("ya-myab-set-default-shipping-btn-0")).click();
 					Thread.sleep(1000);
-
-					// driver.findElement(By.id("nav-link-accountlist")).click();
 					if (driver.getCurrentUrl().contains("setDefaultAddressSuccess")) {
 
 						driver.findElement(By.xpath(".//i[@class='hm-icon nav-sprite']")).click();
@@ -291,9 +271,13 @@ public class SeleniumAmazonTest {
 		}else {
 			finalRes="Skip";
 		}
-
-
-		driver.close();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally{
+			driver.close();
+		}
+		
 		return finalRes;
 	}
 
@@ -307,9 +291,7 @@ public class SeleniumAmazonTest {
 		double balance = client.getBalance();
 		String fileName=null;
 		Captcha captcha = null;
-		Date d= new Date();
 		fileName = "digital_image_processing.jpg";
-		// String website = "https://opfcaptcha-prod.s3.amazonaws.com/8f46832211374cf487e8e7847d4810e4.jpg?AWSAccessKeyId=AKIA5WBBRBBBTXKHVYV7&Expires=1580985575&Signature=okMgQDGpZ2M2zRys5CsBksu6shI%3D";//+fileName;
 		System.out.println("Downloading File From: " + captchaURL);
 
 		URL url = new URL(captchaURL);
@@ -318,29 +300,39 @@ public class SeleniumAmazonTest {
 		byte[] buffer = new byte[2048];
 
 		int length = 0;
+		int counter=0;
 
 		while ((length = inputStream.read(buffer)) != -1) {
 			System.out.println("Buffer Read of length: " + length);
 			outputStream.write(buffer, 0, length);
+			counter++;
+			if(counter>5) {
+				break;
+			}
 		}
 
 		inputStream.close();
 		outputStream.close();
+		if(counter<=5) {
+			captcha = client.decode(System.getProperty("user.dir") + "/"+fileName, 2, 0);
+			if (null != captcha) {
+				/*
+				 * The CAPTCHA was solved; captcha.id property holds its numeric ID, and
+				 * captcha.text holds its text.
+				 */
+				System.out.println("CAPTCHA " + captcha.id + " solved: " + captcha.text);
 
-		captcha = client.decode(System.getProperty("user.dir") + "/"+fileName, 2, 0);
-		if (null != captcha) {
-			/*
-			 * The CAPTCHA was solved; captcha.id property holds its numeric ID, and
-			 * captcha.text holds its text.
-			 */
-			System.out.println("CAPTCHA " + captcha.id + " solved: " + captcha.text);
-
-			if (client.report(captcha)) {
-				System.out.println("Reported as incorrectly solved");
-			} else {
-				System.out.println("Failed reporting incorrectly solved CAPTCHA");
+				if (client.report(captcha)) {
+					System.out.println("Reported as incorrectly solved");
+				} else {
+					System.out.println("Failed reporting incorrectly solved CAPTCHA");
+				}
 			}
+		}else {
+			captcha=null;
 		}
+
+		
 		return captcha;
 
 	}
