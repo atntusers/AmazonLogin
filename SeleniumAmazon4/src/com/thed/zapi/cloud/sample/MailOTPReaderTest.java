@@ -3,10 +3,8 @@ package com.thed.zapi.cloud.sample;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.sound.midi.MidiMessage;
 import javax.mail.*;
-public class MailOTPReader {
+public class MailOTPReaderTest {
 
 	String hostName = "imap.gmail.com";
 	String username = "admin@fgtsoft.site";

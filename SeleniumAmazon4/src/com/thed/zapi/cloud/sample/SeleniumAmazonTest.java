@@ -34,6 +34,7 @@ public class SeleniumAmazonTest {
 		Date date = new Date();  
 		System.out.println("********************* Start Time: *************************"+formatter.format(date));
 
+		
 		WebDriver driver2 = new ChromeDriver();
 		driver2.manage().deleteAllCookies();
 		driver2.manage().window().maximize();
@@ -54,9 +55,10 @@ public class SeleniumAmazonTest {
 			writer.writeNext(header); 
 			BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/test.csv"));
 			String line = null;
+			int userListCount=1;
 			while ((line = br.readLine()) != null) {
 				String str[] = line.split(",");
-				if(!((line.contains("Pass"))||(line.contains("Skip")))) {
+				
 					System.out.println("Testing for :: "+str[0] + "," + str[1] + "," + str[2]);
 					String name=str[0];
 					String emailAddress= str[1];
@@ -77,9 +79,9 @@ public class SeleniumAmazonTest {
 						String[] data1 = { name, emailAddress, finalRes}; 
 						writer.writeNext(data1);
 					}
-				}else {
-					System.out.println(str[0] + "," + str[1] + "," + str[2] +"skip this details");
-				}
+				
+				System.out.println("*********Executed userRowNo:: " + userListCount +" userName "+name+" EmailAddress "+emailAddress);
+				userListCount++;
 			}
 			formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 			Date dateend = new Date();  
@@ -123,7 +125,7 @@ public class SeleniumAmazonTest {
 		
 		if (errText.contains("captcha")) {
 			do {
-				System.out.println("Inside capcha screen");
+				System.out.println("Inside 1st capcha screen");
 				if(driver.findElement(By.xpath(".//body")).getAttribute("innerHTML").contains("Hear the challenge")) {
 					captchaURL=driver.findElement(By.xpath(".//img[contains(@src,'captcha')]")).getAttribute("src");
 					captchaVal= ExampleNewRecaptchaToken(captchaURL);
@@ -181,9 +183,9 @@ public class SeleniumAmazonTest {
 						driver.findElement(By.xpath(".//a[contains(text(),'Resend OTP')]")).click();
 						Thread.sleep(2000);
 					}
-					//moving to gmail account ro get the OTP
+					//moving to gmail account to get the OTP
 					driver2.findElement(By.xpath(".//a[@title='Inbox']")).click();
-					Thread.sleep(5000);
+					Thread.sleep(10000);
 					List <WebElement> inbox= driver2.findElements(By.xpath("(//table[@class='F cf zt'])[2]//tr//td[6]//span[@class='y2']"));
 
 					for(int i=0;i<inbox.size();i++) {
@@ -195,12 +197,19 @@ public class SeleniumAmazonTest {
 					}
 					//MailOTPReader mailReader = new MailOTPReader();
 					//String opt = mailReader.getOTP();
-					driver.findElement(By.xpath(".//input[@name='code']")).sendKeys(otp);
-					driver.findElement(By.xpath("(//input[@type='submit'])[1]")).click();
-					Thread.sleep(6000);
-					OPTpagevalidation= driver.findElement(By.xpath(".//body")).getAttribute("innerHTML");
+					if(driver.findElement(By.xpath(".//body")).getAttribute("innerHTML").contains("@name='code'")) {
+						driver.findElement(By.xpath(".//input[@name='code']")).sendKeys(otp);// i will check later
+						driver.findElement(By.xpath("(//input[@type='submit'])[1]")).click();
+						Thread.sleep(6000);
+						OPTpagevalidation= driver.findElement(By.xpath(".//body")).getAttribute("innerHTML");
+						otpSuccess=true;
+					}else {
+						finalRes="Skip";
+						otpSuccess=false;
+						break;
+					}
 				}while(OPTpagevalidation.contains("Invalid OTP. Please check your code and try again."));
-				otpSuccess=true;
+				
 			}else {
 				//if add mobile number page will appear then skip the user
 				finalRes="Skip";
@@ -229,13 +238,15 @@ public class SeleniumAmazonTest {
 				driver.findElement(By.id("address-ui-widgets-enterAddressLine2")).sendKeys(street);
 				Thread.sleep(1000);
 				driver.findElement(By.id("address-ui-widgets-enterAddressCity")).sendKeys(city);
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				driver.findElement(By.id("address-ui-widgets-enterAddressStateOrRegion")).click();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				driver.findElement(By.xpath(".//a[contains(text(),'"+state+"')]")).click();
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				driver.findElement(By.className("a-button-input")).click();
 				Thread.sleep(5000);
+				if(driver.findElements(By.id("address-ui-widgets-enterAddressPostalCode")).size() != 0){
+					driver.findElement(By.className("a-button-input")).click(); }
 				//driver.findElement(By.xpath(".//span[contains(text(),'Save Address')]")).click();
 				//Thread.sleep(1000);
 				if(driver.getCurrentUrl().contains("yaab-enterAddressSucceed")) {
