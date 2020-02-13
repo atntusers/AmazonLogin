@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Parallel Suite" parallel="tests" thread-count="5">
+	<!-- <test name="test1">
+	<parameter name="gmailuserID" value="admin@fgtsoft.site"/>
+		<parameter name="gmailPass" value="Ram@12345"/>
+		<parameter name="SampleFile" value="test-sample-fgtsoft"/>
+		<classes>
+		<class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest1">
+		</class>
+		</classes>
+	</test> -->
+	
+	<test name="test2">
+	<parameter name="gmailuserID" value="khalid@klmtrips.site"/>
+		<parameter name="gmailPass" value="Ram@12345"/>
+		<parameter name="SampleFile" value="test-sample-klmtrips"/>
+		<classes>
+		<class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest2">
+		</class>
+		</classes>
+	</test>
+	
+	<test name="test3">
+	<parameter name="gmailuserID" value="prashanth@pvrsoft.icu"/>
+		<parameter name="gmailPass" value="sai80080"/>
+		<parameter name="SampleFile" value="test-sample-pvrsoft"/>
+		<classes>
+		<class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest3">
+		</class>
+		</classes>
+	</test>
+	
+	<test name="test4">
+	<parameter name="gmailuserID" value="khalid@stsexports.icu"/>
+		<parameter name="gmailPass" value="Ram@12345"/>
+		<parameter name="SampleFile" value="test-sample-stsexports"/>
+		<classes>
+		<class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest4">
+		</class>
+		</classes>
+	</test>
+	
+	<test name="test5">
+	<parameter name="gmailuserID" value="khalid@trusoft.xyz"/>
+		<parameter name="gmailPass" value="Ram@12345"/>
+		<parameter name="SampleFile" value="test-sample-trusoft"/>
+		<classes>
+		<class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest5">
+		</class>
+		</classes>
+	</test>
+	
+	
+	
+	<test name="test6">
+	<parameter name="gmailuserID" value="khalid@ursexports.icu"/>
+		<parameter name="gmailPass" value="Ram@12345"/>
+		<parameter name="SampleFile" value="test-sample-usrexports"/>
+		<classes>
+		<class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest6">
+		</class>
+		</classes>
+	</test>
+	
+</suite>

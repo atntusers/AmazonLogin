@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite parallel="tests" name="Failed suite [Parallel Suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" parallel="tests" name="test4(failed)">
+    <parameter name="SampleFile" value="test-sample-stsexports"/>
+    <parameter name="gmailPass" value="Ram@12345"/>
+    <parameter name="gmailuserID" value="khalid@stsexports.icu"/>
+    <classes>
+      <class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest3">
+        <methods>
+          <include name="SeleniumAmazonUserTest" invocation-numbers="0 0"/>
+        </methods>
+      </class> <!-- com.thed.zapi.cloud.sample.SeleniumAmazonTest3 -->
+    </classes>
+  </test> <!-- test4(failed) -->
+  <test thread-count="5" parallel="tests" name="test5(failed)">
+    <parameter name="SampleFile" value="test-sample-trusoft"/>
+    <parameter name="gmailPass" value="Ram@12345"/>
+    <parameter name="gmailuserID" value="khalid@trusoft.xyz"/>
+    <classes>
+      <class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest5">
+        <methods>
+          <include name="SeleniumAmazonUserTest" invocation-numbers="0 0 0 0 0 0 0 0 0 0 0 0"/>
+        </methods>
+      </class> <!-- com.thed.zapi.cloud.sample.SeleniumAmazonTest5 -->
+    </classes>
+  </test> <!-- test5(failed) -->
+  <test thread-count="5" parallel="tests" name="test2(failed)">
+    <parameter name="SampleFile" value="test-sample-klmtrips"/>
+    <parameter name="gmailPass" value="Ram@12345"/>
+    <parameter name="gmailuserID" value="khalid@klmtrips.site"/>
+    <classes>
+      <class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest2">
+        <methods>
+          <include name="SeleniumAmazonUserTest" invocation-numbers="0 0 0 0 0 0 0 0 0 0 0 0"/>
+        </methods>
+      </class> <!-- com.thed.zapi.cloud.sample.SeleniumAmazonTest2 -->
+    </classes>
+  </test> <!-- test2(failed) -->
+  <test thread-count="5" parallel="tests" name="test3(failed)">
+    <parameter name="SampleFile" value="test-sample-pvrsoft"/>
+    <parameter name="gmailPass" value="sai80080"/>
+    <parameter name="gmailuserID" value="prashanth@pvrsoft.icu"/>
+    <classes>
+      <class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest3">
+        <methods>
+          <include name="SeleniumAmazonUserTest" invocation-numbers="0 0 0 0 0 0 0 0 0 0"/>
+        </methods>
+      </class> <!-- com.thed.zapi.cloud.sample.SeleniumAmazonTest3 -->
+    </classes>
+  </test> <!-- test3(failed) -->
+  <test thread-count="5" parallel="tests" name="test1(failed)">
+    <parameter name="SampleFile" value="test-sample-fgtsoft"/>
+    <parameter name="gmailPass" value="Ram@12345"/>
+    <parameter name="gmailuserID" value="admin@fgtsoft.site"/>
+    <classes>
+      <class name="com.thed.zapi.cloud.sample.SeleniumAmazonTest1">
+        <methods>
+          <include name="SeleniumAmazonUserTest" invocation-numbers="0 0 0 0 0 0 0 0 0 0 0 0"/>
+        </methods>
+      </class> <!-- com.thed.zapi.cloud.sample.SeleniumAmazonTest1 -->
+    </classes>
+  </test> <!-- test1(failed) -->
+</suite> <!-- Failed suite [Parallel Suite] -->
